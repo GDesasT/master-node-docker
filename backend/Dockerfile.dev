@@ -1,13 +1,18 @@
 FROM node:20-alpine
 
+# Instalar pnpm de forma global dentro del contenedor
+RUN npm install -g pnpm
+
 WORKDIR /app
 
-COPY package*.json ./
+# Copiar el manifiesto y el candado real de pnpm
+COPY package.json pnpm-lock.yaml ./
 
-RUN npm install
+# Instalar las dependencias usando pnpm de forma estricta
+RUN pnpm install --frozen-lockfile
 
 COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "run", "dev"]
